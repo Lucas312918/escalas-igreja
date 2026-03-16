@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escalas da Igreja - Shekinah IAD</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            --bg-card: #ffffff;
+            --bg-input: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --border: #cbd5e1;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --accent-light: #1d4ed8;
+            --hover: #e2e8f0;
+            --active-bg: #10b981;
+            --active-text: #ffffff;
+            --active-border: #059669;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --bg-card: #1e293b;
+            --bg-input: #1e2a44;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --border: #334155;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --accent-light: #60a5fa;
+            --hover: #1e293b;
+            --active-bg: #10b981;
+            --active-text: #ffffff;
+            --active-border: #059669;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            transition: all 0.4s ease;
+        }
+
+        input, select, textarea {
+            background-color: var(--bg-input);
+            border-color: var(--border);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: #64748b;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent-light);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            outline: none;
+        }
+
+        select option {
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .bg-zinc-900 { background-color: var(--bg-card) !important; }
+        .border-zinc-700 { border-color: var(--border) !important; }
+        .text-zinc-300 { color: var(--text-primary) !important; }
+        .text-zinc-400 { color: var(--text-secondary) !important; }
+
+        tr:hover { background-color: var(--hover) !important; }
+
+        .status-ativo {
+            background-color: var(--active-bg);
+            color: var(--active-text);
+            border: 1px solid var(--active-border);
+            padding: 0.35rem 1rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            display: inline-block;
+        }
+
+        .logo-big {
+            width: 280px;
+            height: 280px;
+            object-fit: contain;
+            border-radius: 9999px;
+            background: transparent;
+        }
+        .logo-header {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+            border-radius: 9999px;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+        }
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+
+        h1, h2, h3 {
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+<div class="max-w-7xl mx-auto min-h-screen flex flex-col p-4">
+
+    <!-- TELA DE LOGIN -->
+    <div id="login-screen" class="flex items-center justify-center min-h-screen">
+        <div class="bg-zinc-900 rounded-3xl shadow-2xl w-full max-w-md p-10 border border-zinc-700" style="background: var(--bg-card); border-color: var(--border);">
+            <div class="text-center mb-8">
+                <img src="https://i.imgur.com/Fh26Q9v.png" alt="Shekinah IAD" class="mx-auto logo-big">
+                <h1 class="text-3xl font-bold tracking-tighter">Escalas da Igreja</h1>
+                <p class="text-zinc-400 mt-1 text-lg">Shekinah IAD • Um projeto de Deus</p>
+            </div>
+            <input id="login-username" type="text" class="w-full px-5 py-3.5 rounded-2xl border text-lg" placeholder="Usuário" value="admin">
+            <input id="login-password" type="password" class="w-full px-5 py-3.5 rounded-2xl border text-lg mt-4" placeholder="Senha" value="admin">
+            <button onclick="fazerLogin()" class="w-full btn-primary text-white font-semibold py-4 rounded-2xl text-lg mt-8 transition-all">ENTRAR NO SISTEMA</button>
+            <div class="mt-8 text-center text-xs text-zinc-500">
+                Admin: <strong>admin / admin</strong><br>
+                Voluntário: <strong>joao / 123</strong> ou <strong>maria / 123</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- TELA PRINCIPAL -->
+    <div id="app-screen" class="hidden flex-1 flex flex-col">
+
+        <!-- HEADER -->
+        <header class="bg-zinc-900 border-b border-zinc-800 sticky top-0 z-10" style="background: var(--bg-card); border-color: var(--border);">
+            <div class="px-8 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <img src="https://i.imgur.com/Fh26Q9v.png" alt="Shekinah IAD" class="logo-header">
+                    <h1 class="text-2xl font-bold text-accent">Escalas da Igreja</h1>
+                </div>
+                <div class="flex items-center gap-6">
+                    <div id="user-info" class="flex items-center gap-3"></div>
+                    
+                    <button id="theme-toggle" onclick="toggleTheme()" class="text-accent hover:text-accent-hover flex items-center gap-2 text-xl" title="Alternar tema">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    
+                    <button onclick="logout()" class="text-red-500 hover:text-red-600 flex items-center gap-2">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- PAINEL ADMIN -->
+        <div id="admin-panel" class="flex-1 p-8 hidden">
+            <!-- VOLUNTÁRIOS -->
+            <div class="bg-zinc-900 rounded-3xl p-6 mb-10 shadow-xl border border-zinc-800" style="background: var(--bg-card); border-color: var(--border);">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                    <h2 class="text-xl font-semibold flex items-center gap-3">
+                        <i class="fas fa-users text-accent"></i> Voluntários Cadastrados
+                    </h2>
+                    <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                        <input id="busca-voluntario" type="text" placeholder="Buscar por nome, usuário ou ministério..." 
+                               onkeyup="listarVoluntarios()" 
+                               class="px-5 py-3 border border-zinc-700 rounded-2xl flex-1 min-w-[280px] bg-var(--bg-input) text-var(--text-primary) focus:outline-none focus:border-accent">
+                        <button onclick="abrirModalVoluntario()" 
+                                class="btn-primary text-white px-6 py-3 rounded-2xl transition flex items-center justify-center gap-2">
+                            <i class="fas fa-user-plus"></i> Novo Voluntário
+                        </button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto rounded-xl border border-zinc-800" style="border-color: var(--border);">
+                    <table class="w-full text-sm min-w-[700px]">
+                        <thead class="bg-zinc-800/70" style="background: var(--hover);">
+                            <tr class="border-b text-var(--text-secondary) uppercase tracking-wide text-xs" style="border-color: var(--border);">
+                                <th class="text-left py-4 px-5 font-medium">Nome</th>
+                                <th class="text-left py-4 px-5 font-medium">Usuário</th>
+                                <th class="text-left py-4 px-5 font-medium">Ministério</th>
+                                <th class="text-center py-4 px-5 font-medium">Disponibilidade</th>
+                                <th class="text-center py-4 px-5 font-medium">Status</th>
+                                <th class="text-right py-4 px-5 font-medium w-32">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-voluntarios" class="text-var(--text-primary) divide-y" style="border-color: var(--border);"></tbody>
+                    </table>
+                </div>
+                <div class="mt-5 text-sm text-zinc-500 text-right">
+                    Total de voluntários: <span id="contagem-voluntarios" class="font-semibold text-var(--text-primary)">0</span>
+                </div>
+            </div>
+
+            <!-- ESCALAS -->
+            <div class="bg-zinc-900 rounded-3xl p-6 shadow border border-zinc-800" style="background: var(--bg-card); border-color: var(--border);">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-semibold">Todas as Escalas</h2>
+                    <button onclick="abrirModalEscala()" class="btn-primary text-white px-6 py-3 rounded-2xl hover:bg-accent-hover transition">+ Nova Escala</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b text-var(--text-secondary)" style="border-color: var(--border);">
+                                <th class="text-left py-4 px-4">Data</th>
+                                <th class="text-left py-4 px-4">Ministério</th>
+                                <th class="text-left py-4 px-4">Voluntário</th>
+                                <th class="text-left py-4 px-4">Turno</th>
+                                <th class="text-left py-4 px-4">Observações</th>
+                                <th class="w-24 text-right">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-escalas" class="text-var(--text-primary)"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAINEL VOLUNTÁRIO -->
+        <div id="voluntario-panel" class="flex-1 p-8 overflow-auto hidden" style="background: var(--bg-primary);">
+            <div class="max-w-5xl mx-auto">
+                <div id="saudacao-voluntario" class="mb-8 bg-gradient-to-r from-accent to-accent-hover text-white rounded-3xl p-8 text-center">
+                    <img src="https://i.imgur.com/Fh26Q9v.png" alt="Shekinah IAD" class="mx-auto logo-big mb-4">
+                    <h2 class="text-3xl font-bold">Olá, ${usuarioLogado.nome.split(' ')[0]}!</h2>
+                    <p class="mt-3">Ministério principal: <strong>${usuarioLogado.ministerio || 'Sem ministério definido'}</strong></p>
+                </div>
+
+                <div class="bg-zinc-900 rounded-3xl p-6 mb-8 border border-zinc-700" style="background: var(--bg-card); border-color: var(--border);">
+                    <h3 class="font-semibold mb-4 flex items-center gap-2">
+                        <i class="fas fa-calendar-check text-emerald-500"></i> Minhas escalas
+                    </h3>
+                    <div id="minhas-escalas-list" class="space-y-3"></div>
+                </div>
+
+                <div class="bg-zinc-900 rounded-3xl p-6 mb-8 border border-zinc-700" style="background: var(--bg-card); border-color: var(--border);">
+                    <h3 class="font-semibold mb-4 flex items-center gap-2">
+                        <i class="fas fa-church text-accent-light"></i> Escalas da Igreja
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="border-b text-var(--text-secondary)" style="border-color: var(--border);">
+                                    <th class="py-4 px-4 text-left">Data</th>
+                                    <th class="py-4 px-4 text-left">Ministério</th>
+                                    <th class="py-4 px-4 text-left">Voluntário</th>
+                                    <th class="py-4 px-4 text-left">Turno</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-todas-escalas" class="text-var(--text-primary)"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="bg-zinc-900 rounded-3xl p-6 border border-zinc-700" style="background: var(--bg-card); border-color: var(--border);">
+                    <h3 class="font-semibold mb-6 flex items-center gap-2 text-lg">
+                        <i class="fas fa-clock text-amber-500"></i> Minha Disponibilidade
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-zinc-800/70 rounded-2xl p-5 border border-emerald-800/30" style="background: var(--bg-input); border-color: var(--border);">
+                            <p class="text-emerald-500 font-medium mb-4 flex items-center gap-2">
+                                <i class="fas fa-check-circle"></i> Posso servir:
+                            </p>
+                            <div id="checkbox-disponiveis" class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm"></div>
+                        </div>
+                        <div class="bg-zinc-800/70 rounded-2xl p-5 border border-red-800/30" style="background: var(--bg-input); border-color: var(--border);">
+                            <p class="text-red-500 font-medium mb-4 flex items-center gap-2">
+                                <i class="fas fa-times-circle"></i> Não posso servir:
+                            </p>
+                            <div id="checkbox-indisponiveis" class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm"></div>
+                        </div>
+                    </div>
+                    <button onclick="salvarDisponibilidade()" class="mt-8 w-full btn-primary text-white py-4 rounded-2xl font-semibold shadow-lg transition-all hover:shadow-xl">
+                        SALVAR DISPONIBILIDADE
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAIS -->
+<div id="modal-voluntario" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+    <div class="bg-zinc-900 rounded-3xl p-8 w-full max-w-lg border border-zinc-700" style="background: var(--bg-card); border-color: var(--border);">
+        <h3 class="text-2xl font-bold mb-6 text-accent" id="modal-voluntario-titulo">Novo Voluntário</h3>
+        <input id="vol-nome" type="text" placeholder="Nome completo" class="w-full px-5 py-3.5 rounded-2xl border text-lg" style="background: var(--bg-input); border-color: var(--border);">
+        <div class="grid grid-cols-2 gap-4 mt-4">
+            <input id="vol-usuario" type="text" placeholder="Usuário" class="w-full px-5 py-3.5 rounded-2xl border" style="background: var(--bg-input); border-color: var(--border);">
+            <input id="vol-senha" type="text" value="123" placeholder="Senha" class="w-full px-5 py-3.5 rounded-2xl border" style="background: var(--bg-input); border-color: var(--border);">
+        </div>
+        <select id="vol-ministerio" class="w-full mt-4 px-5 py-3.5 rounded-2xl border" style="background: var(--bg-input); border-color: var(--border); color: var(--text-primary);">
+            <option value="Diáconos">Diáconos</option>
+            <option value="EBD de domingo">EBD de domingo</option>
+            <option value="Intercessão">Intercessão</option>
+            <option value="Recepção">Recepção</option>
+            <option value="Louvor">Louvor</option>
+            <option value="Mídia">Mídia</option>
+            <option value="Coordenação de lanche">Coordenação de lanche</option>
+        </select>
+        <div class="flex gap-3 mt-10">
+            <button onclick="fecharModalVoluntario()" class="flex-1 py-4 border rounded-2xl hover:bg-var(--hover)" style="border-color: var(--border); color: var(--text-primary);">Cancelar</button>
+            <button onclick="salvarVoluntario()" class="flex-1 btn-primary text-white py-4 rounded-2xl">Salvar</button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-escala" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+    <div class="bg-zinc-900 rounded-3xl p-8 w-full max-w-2xl border border-zinc-700 max-h-[90vh] overflow-auto" style="background: var(--bg-card); border-color: var(--border);">
+        <h3 class="text-2xl font-bold mb-6 text-accent" id="modal-escala-titulo">Nova Escala</h3>
+        <div class="grid grid-cols-2 gap-6">
+            <div>
+                <label class="block text-sm mb-1 text-var(--text-secondary)">Ministério</label>
+                <select id="escala-tipo" class="w-full px-5 py-3.5 rounded-2xl border" style="background: var(--bg-input); border-color: var(--border); color: var(--text-primary);"></select>
+            </div>
+            <div>
+                <label class="block text-sm mb-1 text-var(--text-secondary)">Data</label>
+                <input id="escala-data" type="date" class="w-full px-5 py-3.5 rounded-2xl border" style="background: var(--bg-input); border-color: var(--border); color: var(--text-primary);">
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-6 mt-6">
+            <div>
+                <label class="block text-sm mb-1 text-var(--text-secondary)">Turno</label>
+                <select id="escala-horario" class="w-full px-5 py-3.5 rounded-2xl border" style="background: var(--bg-input); border-color: var(--border); color: var(--text-primary);">
+                    <option value="">Selecione o turno...</option>
+                    <option value="Manhã">Manhã (ex: 8h-12h)</option>
+                    <option value="Tarde">Tarde (ex: 14h-18h)</option>
+                    <option value="Noite">Noite (ex: 19h-22h)</option>
+                    <option value="Culto Manhã">Culto da Manhã</option>
+                    <option value="Culto Noite">Culto da Noite</option>
+                    <option value="EBD">EBD (Escola Bíblica Dominical)</option>
+                    <option value="Outro">Outro (especifique nas observações)</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm mb-1 text-var(--text-secondary)">Voluntário</label>
+                <select id="escala-voluntario" class="w-full px-5 py-3.5 rounded-2xl border" style="background: var(--bg-input); border-color: var(--border); color: var(--text-primary);"></select>
+            </div>
+        </div>
+        <div class="mt-6">
+            <label class="block text-sm mb-1 text-var(--text-secondary)">Observações / Informações extras</label>
+            <textarea id="escala-observacoes" rows="3" placeholder="Detalhes adicionais, função específica, local, vestimenta, recado..." 
+                      class="w-full px-5 py-3 rounded-2xl border resize-y" style="background: var(--bg-input); border-color: var(--border); color: var(--text-primary);"></textarea>
+        </div>
+        <div class="flex gap-3 mt-10">
+            <button onclick="fecharModalEscala()" class="flex-1 py-4 border rounded-2xl hover:bg-var(--hover)" style="border-color: var(--border); color: var(--text-primary);">Cancelar</button>
+            <button id="btn-salvar-escala" onclick="salvarEscala()" class="flex-1 btn-primary text-white py-4 rounded-2xl">Salvar Escala</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ====================== DADOS GLOBAIS ======================
+let usuarios = [];
+let escalas = [];
+let usuarioLogado = null;
+let escalaEditandoId = null;
+
+const slotsPossiveis = [
+    "domingo-manha","domingo-noite","segunda-noite","terca-noite","quarta-noite",
+    "quinta-noite","sexta-noite","sabado-manha","sabado-noite"
+];
+
+// ====================== MODO CLARO/ESCURO ======================
+function toggleTheme() {
+    const body = document.body;
+    const current = body.getAttribute('data-theme');
+    const next = current === 'light' ? 'dark' : 'light';
+    
+    body.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+
+    const icon = document.getElementById('theme-toggle').querySelector('i');
+    icon.className = next === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+}
+
+function loadTheme() {
+    const saved = localStorage.getItem('theme') || 'light';
+    document.body.setAttribute('data-theme', saved);
+    const icon = document.getElementById('theme-toggle')?.querySelector('i');
+    if (icon) icon.className = saved === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+}
+
+// ====================== INICIALIZAÇÃO ======================
+function inicializarSistema() {
+    loadTheme();
+
+    if (!localStorage.getItem('usuarios')) {
+        usuarios = [
+            {id:1, nome:"Administrador", usuario:"admin", senha:"admin", perfil:"admin"},
+            {id:2, nome:"João Silva", usuario:"joao", senha:"123", perfil:"voluntario", ministerio:"Diáconos", disponibilidade:["domingo-manha","domingo-noite","quarta-noite"], indisponibilidade:["sabado-manha"]},
+            {id:3, nome:"Maria Oliveira", usuario:"maria", senha:"123", perfil:"voluntario", ministerio:"Intercessão", disponibilidade:["terca-noite","quarta-noite"], indisponibilidade:[]}
+        ];
+        localStorage.setItem('usuarios', JSON.stringify(usuarios));
+        escalas = [];
+        localStorage.setItem('escalas', JSON.stringify(escalas));
+    } else {
+        usuarios = JSON.parse(localStorage.getItem('usuarios'));
+        escalas = JSON.parse(localStorage.getItem('escalas')) || [];
+    }
+
+    const selectTipo = document.getElementById('escala-tipo');
+    ["Diáconos","EBD de domingo","Intercessão","Recepção","Louvor","Mídia","Coordenação de lanche"].forEach(m => {
+        let opt = document.createElement('option');
+        opt.value = m;
+        opt.textContent = m;
+        selectTipo.appendChild(opt);
+    });
+
+    const salvo = localStorage.getItem('usuarioLogado');
+    if (salvo) {
+        usuarioLogado = JSON.parse(salvo);
+        mostrarApp();
+    } else {
+        document.getElementById('login-screen').classList.remove('hidden');
+    }
+
+    // ENTER nos campos
+    document.getElementById('login-username')?.addEventListener('keydown', e => {
+        if (e.key === 'Enter') { e.preventDefault(); fazerLogin(); }
+    });
+
+    document.getElementById('login-password')?.addEventListener('keydown', e => {
+        if (e.key === 'Enter') { e.preventDefault(); fazerLogin(); }
+    });
+
+    document.getElementById('vol-nome')?.addEventListener('keydown', e => {
+        if (e.key === 'Enter') { e.preventDefault(); salvarVoluntario(); }
+    });
+
+    document.getElementById('vol-usuario')?.addEventListener('keydown', e => {
+        if (e.key === 'Enter') { e.preventDefault(); salvarVoluntario(); }
+    });
+
+    document.getElementById('vol-senha')?.addEventListener('keydown', e => {
+        if (e.key === 'Enter') { e.preventDefault(); salvarVoluntario(); }
+    });
+
+    document.getElementById('escala-data')?.addEventListener('keydown', e => {
+        if (e.key === 'Enter') { e.preventDefault(); salvarEscala(); }
+    });
+
+    document.getElementById('escala-horario')?.addEventListener('keydown', e => {
+        if (e.key === 'Enter') { e.preventDefault(); salvarEscala(); }
+    });
+
+    document.getElementById('escala-observacoes')?.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); salvarEscala(); }
+    });
+}
+
+// ====================== LOGIN ======================
+function fazerLogin() {
+    const username = document.getElementById('login-username').value.trim();
+    const senha = document.getElementById('login-password').value.trim();
+    const user = usuarios.find(u => u.usuario === username && u.senha === senha);
+    if (!user) return alert("❌ Usuário ou senha incorretos!");
+    
+    usuarioLogado = user;
+    localStorage.setItem('usuarioLogado', JSON.stringify(user));
+    mostrarApp();
+}
+
+function mostrarApp() {
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app-screen').classList.remove('hidden');
+    
+    document.getElementById('user-info').innerHTML = `
+        <div class="px-5 py-2 rounded-3xl flex items-center gap-3 border" style="background: var(--bg-input); border-color: var(--border);">
+            <img src="https://i.imgur.com/Fh26Q9v.png" alt="Shekinah IAD" class="w-9 h-9 rounded-full object-cover">
+            <div>
+                <div class="font-medium">${usuarioLogado.nome}</div>
+                <div class="text-xs" style="color: var(--text-secondary);">${usuarioLogado.perfil === 'admin' ? 'Administrador' : 'Voluntário'}</div>
+            </div>
+        </div>
+    `;
+    
+    if (usuarioLogado.perfil === 'admin') {
+        document.getElementById('admin-panel').classList.remove('hidden');
+        document.getElementById('voluntario-panel').classList.add('hidden');
+        listarVoluntarios();
+        renderizarTabelaEscalas();
+    } else {
+        document.getElementById('admin-panel').classList.add('hidden');
+        document.getElementById('voluntario-panel').classList.remove('hidden');
+        renderizarPainelVoluntario();
+    }
+}
+
+function logout() {
+    if (confirm("Deseja sair?")) {
+        localStorage.removeItem('usuarioLogado');
+        location.reload();
+    }
+}
+
+// ====================== VOLUNTÁRIOS ======================
+function listarVoluntarios() {
+    const termo = (document.getElementById('busca-voluntario')?.value || '').toLowerCase().trim();
+    const tbody = document.getElementById('tbody-voluntarios');
+    tbody.innerHTML = '';
+
+    const voluntarios = usuarios.filter(u => 
+        u.perfil === 'voluntario' && 
+        (u.nome.toLowerCase().includes(termo) || u.usuario.toLowerCase().includes(termo) || (u.ministerio || '').toLowerCase().includes(termo))
+    );
+
+    if (voluntarios.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="py-12 text-center" style="color: var(--text-secondary);">Nenhum voluntário encontrado</td></tr>`;
+        document.getElementById('contagem-voluntarios').textContent = '0';
+        return;
+    }
+
+    voluntarios.forEach(v => {
+        const dispCount = v.disponibilidade?.length || 0;
+        const indispCount = v.indisponibilidade?.length || 0;
+        const total = slotsPossiveis.length;
+        const dispTexto = dispCount > 0 ? `<span class="text-emerald-500">${dispCount}</span> / ${total}` : `<span class="text-amber-500">—</span>`;
+
+        const tr = document.createElement('tr');
+        tr.className = 'transition-colors';
+        tr.innerHTML = `
+            <td class="py-4 px-5 font-medium">${v.nome}</td>
+            <td class="py-4 px-5" style="color: var(--text-secondary);">${v.usuario}</td>
+            <td class="py-4 px-5">${v.ministerio || '—'}</td>
+            <td class="py-4 px-5 text-center">${dispTexto} <span class="text-xs" style="color: var(--text-secondary);">(${indispCount} indisponível${indispCount !== 1 ? 's' : ''})</span></td>
+            <td class="py-4 px-5 text-center">
+                <span class="status-ativo">Ativo</span>
+            </td>
+            <td class="py-4 px-5 text-right flex items-center justify-end gap-4">
+                <button onclick="abrirModalVoluntario(${v.id})" class="text-accent hover:text-accent-hover transition text-lg" title="Editar">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button onclick="excluirVoluntario(${v.id})" class="text-red-500 hover:text-red-600 transition text-lg" title="Excluir">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+
+    document.getElementById('contagem-voluntarios').textContent = voluntarios.length;
+}
+
+function excluirVoluntario(id) {
+    if (!confirm("Tem certeza que deseja excluir este voluntário?\n\nTodas as escalas associadas a ele também serão removidas.")) return;
+
+    usuarios = usuarios.filter(u => u.id !== id);
+    escalas = escalas.filter(e => e.voluntarioId !== id);
+
+    localStorage.setItem('usuarios', JSON.stringify(usuarios));
+    localStorage.setItem('escalas', JSON.stringify(escalas));
+
+    listarVoluntarios();
+    renderizarTabelaEscalas();
+    alert("Voluntário e escalas associadas excluídos.");
+}
+
+function abrirModalVoluntario(id = null) {
+    document.getElementById('modal-voluntario-titulo').textContent = id ? "Editar Voluntário" : "Novo Voluntário";
+    if (id) {
+        const v = usuarios.find(u => u.id === id);
+        document.getElementById('vol-nome').value = v.nome;
+        document.getElementById('vol-usuario').value = v.usuario;
+        document.getElementById('vol-senha').value = '';
+        document.getElementById('vol-ministerio').value = v.ministerio || 'Diáconos';
+    } else {
+        document.getElementById('vol-nome').value = '';
+        document.getElementById('vol-usuario').value = '';
+        document.getElementById('vol-senha').value = '123';
+        document.getElementById('vol-ministerio').value = 'Diáconos';
+    }
+    document.getElementById('modal-voluntario').classList.remove('hidden');
+}
+
+function fecharModalVoluntario() {
+    document.getElementById('modal-voluntario').classList.add('hidden');
+}
+
+function salvarVoluntario() {
+    const nome = document.getElementById('vol-nome').value.trim();
+    const usuario = document.getElementById('vol-usuario').value.trim();
+    const senha = document.getElementById('vol-senha').value.trim() || '123';
+    const ministerio = document.getElementById('vol-ministerio').value;
+
+    if (!nome || !usuario) return alert("Nome e usuário são obrigatórios!");
+
+    const novo = {
+        id: Math.max(...usuarios.map(u => u.id || 0)) + 1,
+        nome, usuario, senha, perfil: 'voluntario', ministerio,
+        disponibilidade: [], indisponibilidade: []
+    };
+
+    usuarios.push(novo);
+    localStorage.setItem('usuarios', JSON.stringify(usuarios));
+    fecharModalVoluntario();
+    listarVoluntarios();
+    alert("Voluntário cadastrado com sucesso!");
+}
+
+// ====================== ESCALAS ======================
+function abrirModalEscala(id = null) {
+    escalaEditandoId = id;
+    document.getElementById('modal-escala-titulo').textContent = id ? "Editar Escala" : "Nova Escala";
+    
+    document.getElementById('escala-data').value = "";
+    document.getElementById('escala-horario').value = "";
+    document.getElementById('escala-observacoes').value = "";
+
+    const sel = document.getElementById('escala-voluntario');
+    sel.innerHTML = '<option value="">Selecione...</option>';
+    usuarios.filter(u => u.perfil === 'voluntario').forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v.id;
+        opt.textContent = `${v.nome} (${v.ministerio})`;
+        sel.appendChild(opt);
+    });
+
+    if (id) {
+        const e = escalas.find(es => es.id === id);
+        if (e) {
+            document.getElementById('escala-tipo').value = e.tipo;
+            document.getElementById('escala-data').value = e.data;
+            document.getElementById('escala-horario').value = e.horario;
+            document.getElementById('escala-voluntario').value = e.voluntarioId;
+            document.getElementById('escala-observacoes').value = e.observacoes || '';
+        }
+    }
+
+    document.getElementById('modal-escala').classList.remove('hidden');
+}
+
+function fecharModalEscala() {
+    document.getElementById('modal-escala').classList.add('hidden');
+}
+
+function salvarEscala() {
+    const tipo = document.getElementById('escala-tipo').value;
+    const data = document.getElementById('escala-data').value;
+    const horario = document.getElementById('escala-horario').value;
+    const vid = parseInt(document.getElementById('escala-voluntario').value);
+    const observacoes = document.getElementById('escala-observacoes').value.trim();
+
+    if (!tipo || !data || !horario || !vid) {
+        alert("Preencha todos os campos obrigatórios!");
+        return;
+    }
+
+    if (escalas.some(e => 
+        e.voluntarioId === vid && e.data === data && e.horario === horario && e.id !== escalaEditandoId
+    )) {
+        alert("❌ Conflito: este voluntário já está escalado neste dia e turno!");
+        return;
+    }
+
+    const novo = {
+        id: escalaEditandoId || Math.max(0, ...escalas.map(e => e.id)) + 1,
+        tipo, data, horario, voluntarioId: vid,
+        voluntarioNome: usuarios.find(u => u.id === vid)?.nome || 'Desconhecido',
+        observacoes
+    };
+
+    if (escalaEditandoId) {
+        const index = escalas.findIndex(e => e.id === escalaEditandoId);
+        escalas[index] = novo;
+        alert("Escala atualizada!");
+    } else {
+        escalas.push(novo);
+        alert("Escala criada!");
+    }
+
+    localStorage.setItem('escalas', JSON.stringify(escalas));
+    fecharModalEscala();
+    renderizarTabelaEscalas();
+}
+
+function renderizarTabelaEscalas() {
+    const tbody = document.getElementById('tbody-escalas');
+    tbody.innerHTML = '';
+    escalas.forEach(e => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td class="py-4 px-4">${e.data}</td>
+            <td class="py-4 px-4">${e.tipo}</td>
+            <td class="py-4 px-4">${e.voluntarioNome}</td>
+            <td class="py-4 px-4">${e.horario}</td>
+            <td class="py-4 px-4 text-xs max-w-xs truncate" style="color: var(--text-secondary);">${e.observacoes || '—'}</td>
+            <td class="py-4 px-4 text-right">
+                <button onclick="abrirModalEscala(${e.id})" class="text-accent hover:text-accent-hover mr-3">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button onclick="excluirEscala(${e.id})" class="text-red-500 hover:text-red-600">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function excluirEscala(id) {
+    if (confirm("Excluir esta escala?")) {
+        escalas = escalas.filter(e => e.id !== id);
+        localStorage.setItem('escalas', JSON.stringify(escalas));
+        renderizarTabelaEscalas();
+    }
+}
+
+// ====================== PAINEL VOLUNTÁRIO ======================
+function renderizarPainelVoluntario() {
+    const minhas = escalas.filter(e => e.voluntarioId === usuarioLogado.id);
+    
+    document.getElementById('saudacao-voluntario').innerHTML = `
+        <img src="https://i.imgur.com/Fh26Q9v.png" alt="Shekinah IAD" class="mx-auto logo-big mb-4">
+        <h2 class="text-3xl font-bold text-accent">Olá, ${usuarioLogado.nome.split(' ')[0]}!</h2>
+        <p class="mt-3">Ministério principal: <strong>${usuarioLogado.ministerio || 'Sem ministério definido'}</strong></p>
+    `;
+
+    document.getElementById('minhas-escalas-list').innerHTML = minhas.length ? minhas.map(e => `
+        <div class="rounded-2xl p-5 flex justify-between items-center border" style="background: var(--bg-card); border-color: var(--border);">
+            <div>
+                <div class="font-semibold">${e.tipo}</div>
+                <div class="text-xs" style="color: var(--text-secondary);">${e.data} • ${e.horario}</div>
+            </div>
+            <div class="text-emerald-500">Confirmado</div>
+        </div>
+    `).join('') : `<p class="text-center py-8" style="color: var(--text-secondary);">Nenhuma escala ainda</p>`;
+
+    const tbodyTodas = document.getElementById('tbody-todas-escalas');
+    tbodyTodas.innerHTML = '';
+    escalas.forEach(e => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td class="py-4 px-4">${e.data}</td>
+            <td class="py-4 px-4">${e.tipo}</td>
+            <td class="py-4 px-4">${e.voluntarioNome}</td>
+            <td class="py-4 px-4">${e.horario}</td>
+        `;
+        tbodyTodas.appendChild(tr);
+    });
+
+    renderizarDisponibilidade();
+}
+
+function renderizarDisponibilidade() {
+    const vol = usuarios.find(u => u.id === usuarioLogado.id);
+    if (!vol) return;
+
+    const disp = document.getElementById('checkbox-disponiveis');
+    const ind = document.getElementById('checkbox-indisponiveis');
+    disp.innerHTML = ind.innerHTML = '';
+
+    slotsPossiveis.forEach(s => {
+        const checkedDisp = vol.disponibilidade?.includes(s) ? 'checked' : '';
+        const checkedInd = vol.indisponibilidade?.includes(s) ? 'checked' : '';
+        
+        disp.innerHTML += `
+            <label class="flex items-center gap-2 cursor-pointer text-sm">
+                <input type="checkbox" ${checkedDisp} data-slot="${s}" class="accent-emerald-500">
+                <span>${s.replace('-',' ').replace('terca','terça')}</span>
+            </label>`;
+        
+        ind.innerHTML += `
+            <label class="flex items-center gap-2 cursor-pointer text-sm">
+                <input type="checkbox" ${checkedInd} data-slot="${s}" class="accent-red-500">
+                <span>${s.replace('-',' ').replace('terca','terça')}</span>
+            </label>`;
+    });
+}
+
+function salvarDisponibilidade() {
+    const vol = usuarios.find(u => u.id === usuarioLogado.id);
+    if (!vol) return alert("Voluntário não encontrado!");
+
+    vol.disponibilidade = [];
+    vol.indisponibilidade = [];
+
+    document.querySelectorAll('#checkbox-disponiveis input:checked').forEach(c => vol.disponibilidade.push(c.dataset.slot));
+    document.querySelectorAll('#checkbox-indisponiveis input:checked').forEach(c => vol.indisponibilidade.push(c.dataset.slot));
+
+    localStorage.setItem('usuarios', JSON.stringify(usuarios));
+    alert("✅ Sua disponibilidade foi salva com sucesso!");
+}
+
+// ====================== INICIAR ======================
+window.onload = inicializarSistema;
+</script>
+</body>
+</html>
